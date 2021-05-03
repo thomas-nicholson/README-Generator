@@ -70,7 +70,7 @@ const questions = [
             "WTFPL",
             "Zlib"
         ],
-        name: 'License',
+        name: 'license',
     },
     {
         type: 'input',
@@ -84,8 +84,67 @@ const questions = [
     },
   ];
 
+function returnLicenseBadge(license) {
+    return "NoBadge";
+}
+
+function generateMarkdown(data) {
+
+    var { projectName, 
+        description, 
+        installCommand, 
+        usage, 
+        testCommand, 
+        contribution, 
+        license, 
+        githubName, 
+        email} = data
+
+    var licenseBadge = returnLicenseBadge(license);
+
+    var content = `
+# ${projectName}
+## Description
+${description}
+## Table of Contents
+- [Description](#description)
+- [Table of Contents](#table-of-contents)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Tests](#tests)
+- [Contributing](#contributing)
+- [License](#license)
+- [Questions](#questions)
+## Installation
+${installCommand}
+## Usage
+${usage}
+## Tests
+${testCommand}
+## Contributing
+${contribution}
+## License
+${license}
+## Questions
+${githubName}
+${email}
+    `;
+
+    return content;
+}
+
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+function writeToFile(fileName, data) {
+
+    var content = generateMarkdown(data);
+    
+    try {
+        const result = fs.writeFileSync('test.md', content)
+        //file written successfully
+      } catch (err) {
+        console.error(err)
+      }
+}
 
 // TODO: Create a function to initialize app
 function init() {
@@ -93,6 +152,7 @@ function init() {
         .prompt(questions)
         .then((answers) => {
             console.log(answers);
+            writeToFile("Toobs", answers);
         })
         .catch(error => {
             console.log(error);   
